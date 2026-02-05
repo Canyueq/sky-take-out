@@ -1,6 +1,10 @@
 package com.sky.controller.admin;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.context.BaseContext;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
@@ -24,6 +28,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/employee")
 @Slf4j
+@Api(tags = "员工相关接口")
 public class EmployeeController {
 
     @Autowired
@@ -38,14 +43,16 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/login")
+    @ApiOperation("员工登录")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
-        log.info("员工登录：{}", employeeLoginDTO);
+        log.info("employee login:{}", employeeLoginDTO);
 
         Employee employee = employeeService.login(employeeLoginDTO);
 
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
+        BaseContext.setCurrentId(employee.getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
@@ -59,6 +66,21 @@ public class EmployeeController {
                 .build();
 
         return Result.success(employeeLoginVO);
+    }
+
+    /**
+     * 新增员工
+     *
+     * @param employeeDTO
+     * @return
+     */
+    @PostMapping
+    @ApiOperation("新增员工")
+    public Result<Employee> save(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("addemployee:{}", employeeDTO);
+        Employee employee = employeeService.save(employeeDTO);
+
+        return Result.success(employee);
     }
 
     /**

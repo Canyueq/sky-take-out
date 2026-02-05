@@ -1,8 +1,14 @@
 sky:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
     host: localhost
-    port: 3306
+    port: 5432
     database: sky_take_out
-    username: root
-    password: root
+    username: canyue
+    password: 123456
+logging:
+  charset:
+    console: UTF-8 # 控制台日志编码
+    file: UTF-8 # 日志文件编码
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} [%thread] %clr(%-5level) %clr(%logger{36}){cyan} - %msg%n"

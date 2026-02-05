@@ -2,6 +2,13 @@ server:
   port: 8080
 
 spring:
+  servlet:
+    encoding:
+      enabled: true
+      charset: UTF-8
+      force: true
+  tomcat:
+    uri-encoding: UTF-8
   profiles:
     active: dev
   main:
@@ -9,7 +16,7 @@ spring:
   datasource:
     druid:
       driver-class-name: ${sky.datasource.driver-class-name}
-      url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:postgresql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}
       username: ${sky.datasource.username}
       password: ${sky.datasource.password}
 
@@ -22,6 +29,11 @@ mybatis:
     map-underscore-to-camel-case: true
 
 logging:
+  charset:
+    console: UTF-8
+    file: UTF-8
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n" # 补充格式
   level:
     com:
       sky:
