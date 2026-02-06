@@ -1,16 +1,20 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.dto.EmployeeDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 
 import java.time.LocalDateTime;
@@ -69,9 +73,9 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @param employeeDTO
      * @return
      */
-    public Employee save(EmployeeDTO EmployeeDTO) {
+    public Employee save(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
-        BeanUtils.copyProperties(EmployeeDTO, employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
         //设置员工状态
         employee.setStatus(StatusConstant.ENABLE);
         //设置员工密码
@@ -80,7 +84,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
         //设置创建人，修改人id
-        // TODO 后期需要修改
+        //  后期需要修改
         Long id = BaseContext.getCurrentId();
         employee.setCreateUser(id);
         employee.setUpdateUser(id);
@@ -89,4 +93,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         //返回实体对象
         return employee;
     }
+
+    /**
+     *分页查询
+     * 
+     * @param employeePageQueryDTO
+     * @reutrn 
+     */
+    public PageResult page(EmployeePageQueryDTO employeePageQueryDTO) {
+        int page = employeePageQueryDTO.getPage();
+        int size = employeePageQueryDTO.getPageSize();
+        PageHelper.startPage(page,size);
+        Page<Employee> pageResult = employeeMapper.pageQuery(employeePageQueryDTO);
+        return new PageResult(pageResult.getTotal(),pageResult.getResult());
+   }
 }
