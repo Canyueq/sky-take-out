@@ -7,6 +7,7 @@ import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface EmployeeMapper {
@@ -33,4 +34,20 @@ public interface EmployeeMapper {
     * @return  
     */
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+
+    /**
+    * 根据id查询员工
+    *
+    * @param employeePage
+    * @return
+    */
+    Employee getById(long id);
+
+   /**
+    * 修改员工账号
+    * @param status
+    * @param id
+    * @return 
+    */
+   void update(Employee employee);
 }

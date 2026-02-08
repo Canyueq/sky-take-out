@@ -28,4 +28,28 @@ public interface EmployeeService {
      * @return
      */
     PageResult page(EmployeePageQueryDTO employeePageQueryDTO);
+
+    /**
+    * 设置员工账号状态
+    * @param status,id
+    * @return 
+    */
+   public void setStatus(Integer status,long id);
+
+
+    /**
+    * 根据id查询员工
+    *
+    * @param employeePage
+    * @return
+    */
+   public Employee getById(long id);
+
+    /**
+     * 修改员工
+     * 
+     * @param employee
+     * @return
+     */
+    public void update(Employee employee);
 }

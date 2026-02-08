@@ -17,6 +17,7 @@ import com.sky.vo.EmployeeLoginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
@@ -101,6 +102,50 @@ public class EmployeeController {
         PageResult pageResult = employeeService.page(employeePageQueryDTO);
         return Result.success(pageResult);
     }
+
+    /**
+     * 设置员工账号状态
+     * 
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("status/{status}")
+    @ApiOperation("设置员工账号状态")
+    public Result setStatus(@PathVariable Integer status,long id) {
+        log.info("设置员工账号状态,{},{}",status,id);
+        employeeService.setStatus(status,id);
+        return Result.success();
+    }
+    
+    /**
+    * 根据id查询员工
+    *
+    * @param employeePage
+    * @return
+    */
+    @GetMapping
+    @ApiOperation("根据id查询员工")
+    public Result<Employee> page(long id){
+        log.info("id{}",id);
+        Employee employee = employeeService.getById(id);
+        return Result.success(employee);
+    }
+
+    /**
+     * 修改员工
+     * 
+     * @param employee
+     * @return
+     */
+    @PutMapping
+    @ApiOperation("修改员工账号")
+    public Result postMethodName(Employee employee) {
+        log.info("修改的员工,{}",employee);
+        employeeService.update(employee);
+        return Result.success();
+    }
+    
 
     /**
      * 退出
