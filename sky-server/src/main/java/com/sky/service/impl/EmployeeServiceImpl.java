@@ -108,13 +108,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(pageResult.getTotal(),pageResult.getResult());
    }
 
-   /**
+    /**
     * 设置员工账号状态
      * @param status
      * @param id
      * @return
     */
-   public void setStatus(Integer status,long id) {
+    public void setStatus(Integer status,long id) {
         Employee employee = Employee.builder()
                             .id(id)
                             .status(status)
@@ -129,7 +129,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     * @param employeePage
     * @return
     */
-   public Employee getById(long id){
+    public Employee getById(long id){
         Employee employee = employeeMapper.getById(id);
         return employee;
    }
@@ -141,6 +141,8 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @return
      */
     public void update(Employee employee) {
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.update(employee);
     }
 }

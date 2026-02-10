@@ -31,7 +31,8 @@ public interface EmployeeService {
 
     /**
     * 设置员工账号状态
-    * @param status,id
+    * @param status
+    * @param id
     * @return 
     */
    public void setStatus(Integer status,long id);
