@@ -105,4 +105,16 @@ public class CategoryController {
         categoryService.deleteById(id);
         return Result.success();
     }
+
+    /** 
+    * 根据类型查询分类
+     * @param type
+     * @return
+    */
+   @GetMapping("list")
+   @ApiOperation("根据类型查询分类")
+    public Result<Category[]> selectByType(Integer type){
+        Category[] categories = categoryService.selectByType(type);
+        return Result.success(categories);
+    }
 }

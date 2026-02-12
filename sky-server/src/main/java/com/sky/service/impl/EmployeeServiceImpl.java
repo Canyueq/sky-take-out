@@ -62,7 +62,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             //账号被锁定
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
         }
-
         //3、返回实体对象
         return employee;
     }

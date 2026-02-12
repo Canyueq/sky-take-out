@@ -2,6 +2,7 @@ package com.sky.service;
 
 import com.sky.entity.Category;
 
+import org.apache.ibatis.annotations.Select;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.sky.dto.CategoryDTO;
@@ -48,4 +49,10 @@ public interface CategoryService {
     */
     public void deleteById(Long id);
 
+    /**
+    * 根据类型查询分类
+     * @param type
+     * @return
+    */
+    public Category[] selectByType(Integer type);
 }

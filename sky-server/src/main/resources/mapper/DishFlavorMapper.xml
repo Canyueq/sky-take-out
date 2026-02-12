@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.mapper.DishFlavorMapper">
+    <!-- 批量插入口味数据（修正所有MyBatis/SQL问题） -->
+    <insert id="insert">
+        insert into dish_flavor(dish_id, name, value)  <!-- 移除自增的id字段 -->
+        VALUES  <!-- 外层括号 -->
+        <foreach collection="list" item="df" separator=",">
+            (#{df.dishId}, #{df.name}, #{df.value})  <!-- 修正字段名 + 内层括号 -->
+        </foreach>
+    </insert>
+</mapper>

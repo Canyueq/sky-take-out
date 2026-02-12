@@ -1,13 +1,14 @@
 package com.sky.mapper;
 
-import com.sky.dto.CategoryDTO;
+import com.sky.annotation.AutoFill;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.enumeration.OperationType;
 import com.github.pagehelper.Page;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.apache.ibatis.annotations.Select;
 
 
 @Mapper
@@ -33,6 +34,7 @@ public interface CategoryMapper {
      * @param category
      * @return
     */
+   @AutoFill(OperationType.INSERT)
     void insert(Category category);
 
     /**
@@ -42,4 +44,12 @@ public interface CategoryMapper {
     */
     @Delete("delete from category where id = #{id}")
     void deleteById(Long id);
+
+    /**
+    * 根据类型查询分类
+     * @param type
+     * @return
+    */
+    @Select("select * from category where type = #{type}")
+    Category[] selectByType(Integer id);
 }
