@@ -7,4 +7,7 @@ import com.sky.service.SetmealService;
 @Controller
 public class SetmealController {
     SetmealService setMealService;
+
+    @PostMapping
+    @ApiOperation("")
 }
