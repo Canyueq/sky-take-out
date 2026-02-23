@@ -115,9 +115,9 @@ public class DishController {
      */
     @GetMapping("list")
     @ApiOperation("根据分类id查询菜品")
-    public Result<Integer> getByCategoryId(@PathVariable("id") Long id) {
-        Integer count = dishServiceImpl.getByCategoryId(id);
-        return Result.success(count);
+    public Result<List<Dish>> getByName(String name) {
+        List<Dish> dish = dishServiceImpl.getByCategoryId(name);
+        return Result.success(dish);
     }
     
     /**

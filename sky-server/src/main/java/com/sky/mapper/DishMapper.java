@@ -69,4 +69,12 @@ public interface DishMapper {
     @Select("select * from dish where id=#{id}")
      Dish getById(long id);
 
+     /**
+      * 通过名称查询菜品
+      * @param name
+      * @return
+      */
+     @Select("select * from dish where name like concat('%',#{name},'%')")
+     List<Dish> getListByCategoryId(String name);
+
 }

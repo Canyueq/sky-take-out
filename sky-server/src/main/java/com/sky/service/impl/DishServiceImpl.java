@@ -147,13 +147,13 @@ public class DishServiceImpl implements DishService{
     }
 
     /**
-     * 根据分类id查询菜品
-     * @param id
+     * 根据分类名称查询菜品
+     * @param name
      * @return
      */
-    public Integer getByCategoryId(long id) {
-        Integer count = dishMapper.getByCategoryId(id);
-        return count;
+    public List<Dish> getByCategoryId(String name) {
+        List<Dish> dish = dishMapper.getListByCategoryId(name);
+        return dish;
     }
     
     /**

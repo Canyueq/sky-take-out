@@ -48,7 +48,7 @@ public interface DishService {
      * @param id
      * @return
      */
-    public Integer getByCategoryId(long id) ;
+    public List<Dish> getByCategoryId(String name) ;
     
     /**
      * 修改菜品状态
