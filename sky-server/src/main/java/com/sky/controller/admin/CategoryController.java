@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * 员工管理
  */
-@RestController
+@RestController("adminCategoryController")
 @RequestMapping("/admin/category")
 @Slf4j
 @Api(tags = "分类相关接口")

@@ -8,8 +8,7 @@
       "mainClass": "com.sky.SkyApplication",
       "projectName": "sky-server",
       "args": "",
-      "envFile": "${workspaceFolder}/.env",
-      "vmArgs": "-Dfile.encoding=UTF-8"
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }

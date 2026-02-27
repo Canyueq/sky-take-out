@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.mapper.SetmealDishMapper;
@@ -13,6 +14,7 @@ import com.sky.service.SetmealService;
 import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +22,8 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;;
 
 @Slf4j
 @Service
@@ -113,5 +116,22 @@ public class SetmealServiceImpl implements SetmealService{
         setmealVO.setSetmealDishes(setmealDish);
         log.info("查询到的套餐,{}",setmealDish);
         return setmealVO;
+    }
+
+    /**
+     * 通过分类id查询
+     * @param categoryId
+     * @return
+     */
+    @Transactional
+    public List<Setmeal> getByCategoryId(Long categoryId){
+        List<Setmeal> setmeal=setmealMapper.getByCategoryId(categoryId);
+        log.info("查询到的套餐,{}",setmeal);
+        return setmeal;
+    }
+
+    public List<DishItemVO> getDishItemById(Long id){
+        List<DishItemVO> dishItemVOs = setmealMapper.getDishItemById(id);
+        return dishItemVOs;
     }
 }

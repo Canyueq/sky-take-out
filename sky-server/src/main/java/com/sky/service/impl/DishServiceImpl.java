@@ -9,16 +9,19 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
+import com.sky.vo.DishItemVO;
 import com.sky.vo.DishVO;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -151,8 +154,18 @@ public class DishServiceImpl implements DishService{
      * @param name
      * @return
      */
-    public List<Dish> getByCategoryId(String name) {
-        List<Dish> dish = dishMapper.getListByCategoryId(name);
+    public List<Dish> getByCategoryName(String name) {
+        List<Dish> dish = dishMapper.getListByCategoryName(name);
+        return dish;
+    }
+
+    /**
+     * 根据分类id查询菜品
+     * @param id
+     * @return
+     */
+    public List<Dish> getByCategoryId(Long id) {
+        List<Dish> dish = dishMapper.getListByCategoryId(id);
         return dish;
     }
     
@@ -167,4 +180,34 @@ public class DishServiceImpl implements DishService{
         Dish dish = Dish.builder().status(status).id(id).build();
         dishMapper.update(dish);
     }
+
+    /**
+     * 根据套餐id查询菜品
+     * @param setmealId
+     * @return
+     */
+        public List<SetmealDish> geBySetmealId(Long setmealId){
+        List<SetmealDish> setmealDish = setmealDishMapper.getBySetmealId(setmealId);
+        return setmealDish;
+    }
+
+    /**
+     * 条件查询菜品和口味
+     * @param dish
+     * @return
+     */
+    public List<DishVO> ListwthFlavors(Long id){
+        List<DishVO> dishVOList = new ArrayList<DishVO>();
+        List<Dish> dish = dishMapper.getListByCategoryId(id);
+        dish.forEach(item -> {  
+            DishVO dishVO = new DishVO();
+            BeanUtils.copyProperties(item, dishVO);
+            dishVO.setFlavors(dishFlavorMapper.getByDishId(item.getId()));
+            dishVOList.add(dishVO);
+        });
+ 
+        return dishVOList;
+    }
+
+    
 }

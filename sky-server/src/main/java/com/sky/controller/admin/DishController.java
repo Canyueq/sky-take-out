@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 
-@RestController
+@RestController("adminDishController")
 @Slf4j
 @RequestMapping("/admin/dish")
 @Api(tags="菜品相关接口")
@@ -116,7 +116,7 @@ public class DishController {
     @GetMapping("list")
     @ApiOperation("根据分类id查询菜品")
     public Result<List<Dish>> getByName(String name) {
-        List<Dish> dish = dishServiceImpl.getByCategoryId(name);
+        List<Dish> dish = dishServiceImpl.getByCategoryName(name);
         return Result.success(dish);
     }
     

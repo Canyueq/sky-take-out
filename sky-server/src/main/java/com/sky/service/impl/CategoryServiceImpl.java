@@ -1,6 +1,7 @@
 package com.sky.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import com.github.pagehelper.Page;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.entity.Setmeal;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.SetmealMapper;
@@ -109,11 +111,11 @@ public class CategoryServiceImpl implements CategoryService {
      * @return
     */
     public void deleteById(Long id){
-        Integer count = setmealMapper.getByCategoryId(id);
-        if(count > 0){
+        List<Setmeal> setmeal = setmealMapper.getByCategoryId(id);
+        if(setmeal.size() > 0){
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
         }
-        count = dishMapper.getByCategoryId(id);
+        Integer count = dishMapper.getByCategoryId(id);
         if(count > 0){
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
         }

@@ -34,6 +34,7 @@ public class ShopController {
     @ApiOperation("设置店铺状态")
     public Result setStatus(@PathVariable Integer status) {
         //TODO: process PUT request
+        log.info("店铺设置的状态,{}",status);
         redisTemplate.opsForValue().set(key,status);
         return Result.success(); 
     }
@@ -45,6 +46,7 @@ public class ShopController {
     @GetMapping("status")
     @ApiOperation("获取店铺状态")
     public Result<Integer> getStatus() {
+        log.info("店铺的状态,{}");
         Integer status = (Integer) redisTemplate.opsForValue().get(key);
         return Result.success(status);
     }
