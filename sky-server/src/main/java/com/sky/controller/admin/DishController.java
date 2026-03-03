@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,11 +38,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class DishController {
 
     private final DishServiceImpl dishServiceImpl;
-
+    private final RedisTemplate redisTemplate;
     private final DishService dishesService;
-    public DishController(DishService dishesService, DishServiceImpl dishServiceImpl){
+    public DishController(DishService dishesService, DishServiceImpl dishServiceImpl,RedisTemplate redisTemplate){
         this.dishesService = dishesService;
         this.dishServiceImpl = dishServiceImpl;
+        this.redisTemplate = redisTemplate;
     }
 
     /**
@@ -53,6 +56,9 @@ public class DishController {
     public Result add(@RequestBody DishDTO dishDTO){
         log.info("新增菜品,{}",dishDTO);
         dishesService.add(dishDTO);
+        //新增后需要清理缓存数据
+        String key = "dish_"+dishDTO.getId();
+        cleanCache(key);
         return Result.success();
     }
 
@@ -71,14 +77,16 @@ public class DishController {
     }
 
     /**
-     * 通过id删除菜品
-     * @param id
+     * 批量删除菜品
+     * @param ids
      */
     @DeleteMapping
     @ApiOperation("通过id删除菜品")
     public Result deleteById(@RequestParam List<Long> ids){
         log.info("菜品批量删除,{}",ids);
         dishServiceImpl.deleteById(ids);
+        //将所有菜品缓存数据清理掉,所有以dish_开头的key
+        cleanCache("dish_*");
         return Result.success();
     }
 
@@ -92,6 +100,8 @@ public class DishController {
     public Result update(@RequestBody DishDTO dishDTO) {
         //TODO: process PUT request
         dishServiceImpl.update(dishDTO);
+        //将所有菜品缓存数据清理掉,所有以dish_开头的key
+        cleanCache("dish_*");
         return Result.success();
     }
 
@@ -105,6 +115,8 @@ public class DishController {
     public Result<DishVO> getById(@PathVariable("id") Long id) {
         log.info("参数,{}",id);
         DishVO dishVO = dishServiceImpl.getById(id);
+        //将所有菜品缓存数据清理掉,所有以dish_开头的key
+        cleanCache("dish_*");
         return Result.success(dishVO);
     }
 
@@ -135,4 +147,9 @@ public class DishController {
         return Result.success();
     }
     
+    private void cleanCache(String pattern){
+        //将所有菜品缓存数据清理掉,所有以dish_开头的key
+        Set keys = redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
+    }
 }

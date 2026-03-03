@@ -94,7 +94,7 @@ public class Orders implements Serializable {
     private LocalDateTime estimatedDeliveryTime;
 
     //配送状态  1立即送出  0选择具体时间
-    private Integer deliveryStatus;
+    private Boolean deliveryStatus;
 
     //送达时间
     private LocalDateTime deliveryTime;
@@ -106,5 +106,5 @@ public class Orders implements Serializable {
     private int tablewareNumber;
 
     //餐具数量状态  1按餐量提供  0选择具体数量
-    private Integer tablewareStatus;
+    private Boolean tablewareStatus;
 }

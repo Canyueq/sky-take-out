@@ -57,5 +57,5 @@ public class AddressBook implements Serializable {
     private String label;
 
     //是否默认 0否 1是
-    private Integer isDefault;
+    private Boolean isDefault;
 }

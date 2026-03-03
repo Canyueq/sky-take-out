@@ -80,5 +80,5 @@ public interface DishService {
      * @param dish
      * @return
      */
-    public List<DishVO> ListwthFlavors(Long id);
+    public List<DishVO> ListwthFlavors(Dish dish);
 }

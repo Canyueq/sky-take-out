@@ -196,10 +196,10 @@ public class DishServiceImpl implements DishService{
      * @param dish
      * @return
      */
-    public List<DishVO> ListwthFlavors(Long id){
+    public List<DishVO> ListwthFlavors(Dish dish){
         List<DishVO> dishVOList = new ArrayList<DishVO>();
-        List<Dish> dish = dishMapper.getListByCategoryId(id);
-        dish.forEach(item -> {  
+        List<Dish> dishList = dishMapper.list(dish);
+        dishList.forEach(item -> {  
             DishVO dishVO = new DishVO();
             BeanUtils.copyProperties(item, dishVO);
             dishVO.setFlavors(dishFlavorMapper.getByDishId(item.getId()));
@@ -208,6 +208,4 @@ public class DishServiceImpl implements DishService{
  
         return dishVOList;
     }
-
-    
 }

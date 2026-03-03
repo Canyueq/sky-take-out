@@ -2,8 +2,11 @@ package com.sky.service;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
 import com.sky.vo.SetmealVO;
 
@@ -46,4 +49,11 @@ public interface SetmealService {
      * @return
      */
     public SetmealVO getById(Long id);
+
+    /**
+     * 通过分类id查询
+     * @param categoryId
+     * @return
+     */
+    public List<Setmeal> list(Setmeal setmeal);
 }

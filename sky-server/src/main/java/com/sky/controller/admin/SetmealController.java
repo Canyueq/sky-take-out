@@ -13,6 +13,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +53,7 @@ public class SetmealController {
      */
     @PostMapping
     @ApiOperation("新增")
+    @CacheEvict(cacheNames = "setmealCache",key = "#setmealDTO.categoryId")
     public Result add(@RequestBody SetmealDTO setmealDTO) {
         //TODO: process POST request
         log.info("新增的套餐,{}",setmealDTO);
@@ -65,6 +68,7 @@ public class SetmealController {
      */
     @PutMapping
     @ApiOperation("编辑套餐")
+    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     public Result update(@RequestBody SetmealDTO setmealDTO) {
         //TODO: process PUT request
         log.info("编辑的套餐，{}",setmealDTO);
@@ -80,6 +84,7 @@ public class SetmealController {
      */
     @PostMapping("status/{status}")
     @ApiOperation("修改状态")
+    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     public Result setStatus(@PathVariable Integer status,Long id) {
         //TODO: process POST request
         setmealServiceImpl.setStatus(status,id);
@@ -93,6 +98,7 @@ public class SetmealController {
      */
     @DeleteMapping
     @ApiOperation("通过ids删除套餐")
+    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     public Result deleteByIds(@RequestParam("ids") List<Long> ids){
         setmealServiceImpl.deleteByIds(ids);
         return Result.success();
@@ -105,6 +111,7 @@ public class SetmealController {
      */
     @GetMapping
     @ApiOperation("通过id查询")
+    @Cacheable(cacheNames = "userCache",key = "#setmealDTO.id") //key生成 userCache::id
     public Result<SetmealVO> getById(Long id) {
         SetmealVO setmealVO = setmealServiceImpl.getById(id);
         return Result.success(setmealVO);

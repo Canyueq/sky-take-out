@@ -123,13 +123,17 @@ public class SetmealServiceImpl implements SetmealService{
      * @param categoryId
      * @return
      */
-    @Transactional
-    public List<Setmeal> getByCategoryId(Long categoryId){
-        List<Setmeal> setmeal=setmealMapper.getByCategoryId(categoryId);
-        log.info("查询到的套餐,{}",setmeal);
-        return setmeal;
+    public List<Setmeal> list(Setmeal setmeal){
+        List<Setmeal> setmealList = setmealMapper.list(setmeal);
+        log.info("查询到的套餐,{}",setmealList);
+        return setmealList;
     }
 
+    /**
+     * 根据id查询菜品
+     * @param id
+     * @return
+     */
     public List<DishItemVO> getDishItemById(Long id){
         List<DishItemVO> dishItemVOs = setmealMapper.getDishItemById(id);
         return dishItemVOs;
