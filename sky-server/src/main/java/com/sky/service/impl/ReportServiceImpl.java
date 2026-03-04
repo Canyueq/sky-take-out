@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,7 +11,13 @@ import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +26,8 @@ import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
+import com.sky.service.WorkspaceService;
+import com.sky.vo.BusinessDataVO;
 import com.sky.vo.OrderReportVO;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
@@ -32,6 +41,8 @@ public class ReportServiceImpl implements ReportService{
     private OrderMapper orderMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private WorkspaceService workspaceService;
     /**
      * 获取指定时间的营业额
      * @param begin
@@ -178,5 +189,67 @@ public class ReportServiceImpl implements ReportService{
             .nameList(StringUtils.join(names,","))
             .numberList(StringUtils.join(numbers, ","))
             .build();
+    }
+
+    /**
+     * 导出运营报表
+     * @param httpServletResponse
+     */
+    public void exportBusinessData(HttpServletResponse httpServletResponse){
+        //1.查询数据
+        LocalDate dateBegin = LocalDate.now().minusDays(30);
+        LocalDate dateEnd = LocalDate.now().minusDays(1);
+        BusinessDataVO businessDataVO = workspaceService.getBusinessData(
+            LocalDateTime.of(dateBegin,LocalTime.MIN), 
+            LocalDateTime.of(dateEnd,LocalTime.MAX)
+        );
+        //2.通过poi写入excel
+        InputStream in =this.getClass().getClassLoader().getResourceAsStream("template/运营数据报表模板.xlsx");
+        try {
+            //基于模板文件创建新的excel文件
+
+            //获取表格的sheet
+            XSSFWorkbook excel = new XSSFWorkbook(in);
+
+            XSSFSheet sheet =  excel.getSheet("sheet1");
+                        
+            //填充数据时间
+            sheet.getRow(1).getCell(1).setCellValue("时间"+dateBegin+"至"+dateEnd);
+
+            //获取第4行
+            XSSFRow row =  sheet.getRow(3);
+            row.getCell(2).setCellValue(businessDataVO.getTurnover());
+            row.getCell(4).setCellValue(businessDataVO.getOrderCompletionRate());
+            row.getCell(6).setCellValue(businessDataVO.getNewUsers());
+            //;获取第5行
+            row =  sheet.getRow(4);
+            row.getCell(2).setCellValue(businessDataVO.getValidOrderCount());
+            row.getCell(4).setCellValue(businessDataVO.getUnitPrice());
+            //填充明细数据
+            for(int i=0;i<30;i++){
+                LocalDate date = dateBegin.plusDays(i);
+                BusinessDataVO businessData = workspaceService.getBusinessData(
+                    LocalDateTime.of(date, LocalTime.MIN),
+                    LocalDateTime.of(date, LocalTime.MAX));
+                //获取循环中的行
+                row = sheet.getRow(7+i);
+                row.getCell(1).setCellValue(date.toString());
+                row.getCell(2).setCellValue(businessData.getTurnover());
+                row.getCell(3).setCellValue(businessData.getOrderCompletionRate());
+                row.getCell(4).setCellValue(businessData.getValidOrderCount());
+                row.getCell(5).setCellValue(businessData.getUnitPrice());
+                row.getCell(6).setCellValue(businessData.getNewUsers());
+            }
+            //3.通过http流下载excel到客户端
+            ServletOutputStream out = httpServletResponse.getOutputStream();
+            excel.write(out);
+            //关闭资源
+            out.close();
+            excel.close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+
     }
 }
