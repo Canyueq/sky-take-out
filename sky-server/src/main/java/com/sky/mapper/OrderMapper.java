@@ -2,11 +2,13 @@ package com.sky.mapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 
@@ -59,4 +61,16 @@ public interface OrderMapper {
      */
     @Select("select from orders where status=#{status} and order_time <#{orderTime}")
     List<Orders> getByStatusAndOrderTime(Integer status,LocalDateTime orderTime);
+
+    Double sumByMap(Map map);
+
+    Integer countByMap(Map map);
+
+    /**
+     * 统计指定时间内的销量排名
+     * @param begin
+     * @param end
+     * @return
+     */
+    List<GoodsSalesDTO> getSalesTop10(LocalDateTime begin,LocalDateTime end);
 }
